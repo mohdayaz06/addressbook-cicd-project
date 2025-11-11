@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    triggers {
+        // This enables GitHub Webhook trigger
+        githubPush()
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: 'https://github.com/mohdayaz06/addressbook-cicd-project'
+            }
+        }
+
+        stage('Compile Code') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test Code') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Code Quality Check') {
+            steps {
+                sh 'mvn pmd:pmd'
+            }
+        }
+
+        stage('Package Application') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                sh '''
+                    sudo cp /var/lib/jenkins/workspace/github_hook/target/addressbook.war /home/ubuntu/apache-tomcat-9.0.111/webapps/
+                    cd /home/ubuntu/apache-tomcat-9.0.111/bin
+                    ./shutdown.sh || true
+                    ./startup.sh
+                '''
+            }
+        }
+    }
+}
