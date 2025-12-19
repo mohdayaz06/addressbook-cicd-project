@@ -1,0 +1,18 @@
+---
+apiVersion: v1                    # Level 0 → main section
+kind: Service                     # Level 0 → main section
+
+metadata:                         # Level 0
+  name: java-app-service         # Level 1 (2 spaces)
+  labels:                          # Level 1 (2 spaces)
+    app: java-app                # Level 2 (4 spaces)
+
+spec:                             # Level 0
+  selector:                        # Level 1 (2 spaces)
+    app: java-app                # Level 2 (4 spaces)
+
+  type: LoadBalancer               # Level 1 (2 spaces)
+
+  ports:                           # Level 1 (2 spaces)
+    - protocol: TCP                # Level 2 (4 spaces) “–” starts a list
+      port: 8080                     # Level 3 (6 spaces)
